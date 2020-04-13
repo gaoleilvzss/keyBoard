@@ -11,6 +11,6 @@
 
     <!--输入框按键样式-->
     <!--<style name="PWKInputItemStyleKey" parent="PWKInputItemStyle_FILLED_KEY"/>-->
-    <!--<style name="PWKInputViewStyle" parent="PWKInputViewStyle_DIVIDED"/>-->
+    <style name="PWKInputViewStyle" parent="PWKInputViewStyle_DIVIDED"/>
 
 </resources>

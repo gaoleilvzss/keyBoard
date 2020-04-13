@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2017. Xi'an iRain IOT Technology service CO., Ltd (ShenZhen). All Rights Reserved.
-  -->
-
 <resources>
-    <!--输入框字体大小-->
-    <declare-styleable name="InputView">
-        <attr name="pwkInputTextSize" format="dimension"/>
-        <attr name="pwkSelectedDrawable" format="string"/>
-        <attr name="pwkIndex9TextSize" format="dimension"/>
-        <attr name="pwkInputBackgroud" format="color"/>
-        <attr name="pwkInputRadio" format="dimension"/>
-    </declare-styleable>
-    <attr name="pwkInputStyle" format="reference"/>
     <declare-styleable name="RoundRadiusButton">
         <attr name="roundRadius" format="dimension" />
         <attr name="leftTopRadius" format="dimension"/>

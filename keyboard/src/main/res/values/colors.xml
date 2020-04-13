@@ -15,11 +15,14 @@
     <color name="pwk_key_pressed_gray">#CECECE</color>
 
     <!--兼容属性-->
-    <color name="pwk_keyboard_primary_color">#418AF9</color>
+    <color name="pwk_keyboard_primary_color">#e50011</color>
     <color name="pwk_keyboard_primary_dark_color">#3A7CE0</color>
 
     <!--定义键盘组件的颜色-->
     <color name="pwk_primary_color">@color/pwk_keyboard_primary_color</color>
     <color name="pwk_primary_dark_color">@color/pwk_keyboard_primary_dark_color</color>
 
+    <color name="black_tran_30">#30000000</color>
+    <color name="pwk_f66">#ff666666</color>
+    <color name="pwk_333">#ff333333</color>
 </resources>

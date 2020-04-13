@@ -41,6 +41,7 @@
     <!--边框样式-->
     <style name="PWKInputItemStyle_BORDER_KEY" parent="PWKInputItemBaseStyle">
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundTint">#ffeeeeee</item>
         <item name="android:textColor">@color/pwk_input_item_text_border</item>
         <item name="android:layout_margin">0px</item>
     </style>
@@ -50,6 +51,15 @@
     <!--可以通过覆盖这个样式的设置来修改不同的样式-->
     <!--按键样式-->
     <style name="PWKInputItemStyleKey" parent="PWKInputItemStyle_BORDER_KEY"/>
+    <style name="PWKInputItemStyleKeymid" parent="PWKInputItemStyle_BORDER_KEY">
+        <item name="android:background">@drawable/pwk_midbutton_radius</item>
+    </style>
+    <style name="PWKInputItemStyleKeyleft" parent="PWKInputItemStyle_BORDER_KEY">
+        <item name="android:background">@drawable/pwk_leftbutton_radius</item>
+    </style>
+    <style name="PWKInputItemStyleKeyright" parent="PWKInputItemStyle_BORDER_KEY">
+        <item name="android:background">@drawable/pwk_rightbutton_radius</item>
+    </style>
     <!--输入框整体样式-->
     <style name="PWKInputViewStyle" parent="PWKInputViewStyle_MIXED"/>
 

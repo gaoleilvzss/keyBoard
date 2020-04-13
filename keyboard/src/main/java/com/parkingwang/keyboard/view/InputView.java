@@ -18,6 +18,9 @@ import com.parkingwang.vehiclekeyboard.R;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.parkingwang.keyboard.KeyboardInputController.mLockedOnNewEnergyType;
 
 /**
  * @author 陈哈哈 (yoojiachen@gmail.com)
@@ -34,6 +37,22 @@ public class InputView extends LinearLayout {
 
     private final FieldViewGroup mFieldViewGroup;
 
+
+
+    private final OnClickListener mOnFieldViewClickListener_9 = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final Button field = (Button) v;
+            Log.e(TAG, "onClick: test" );
+            if(!mLockedOnNewEnergyType){
+                field.setVisibility(GONE);
+                set8thVisibility(true);
+            }
+        }
+    };
+    public Button get9Button(){
+        return mFieldViewGroup.get9Button();
+    }
     /**
      * 点击选中输入框时，只可以从左到右顺序输入，不可隔位
      */
@@ -77,7 +96,7 @@ public class InputView extends LinearLayout {
     public InputView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        inflate(context, R.layout.pwk_input_view, this);
+        inflate(context, R.layout.pwk_input_view_vinsuan, this);
         mFieldViewGroup = new FieldViewGroup() {
             @Override
             protected Button findViewById(int id) {
@@ -90,14 +109,18 @@ public class InputView extends LinearLayout {
     private void onInited(Context context, AttributeSet attrs, int defStyleAttr) {
         final TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.InputView, defStyleAttr, 0);
         final float textSize = ta.getDimension(R.styleable.InputView_pwkInputTextSize, 0);
+        final float textSize_9 = ta.getDimension(R.styleable.InputView_pwkIndex9TextSize,9);
         final String drawableClassName = ta.getString(R.styleable.InputView_pwkSelectedDrawable);
+        final int buttonBackgroud = ta.getColor(R.styleable.InputView_pwkInputBackgroud,0);
+        final int buttonRadio = ta.getColor(R.styleable.InputView_pwkInputRadio,0);
         ta.recycle();
 
         initSelectedDrawable(context, drawableClassName);
-
-        mFieldViewGroup.setupAllFieldsTextSize(textSize);
-        mFieldViewGroup.setupAllFieldsOnClickListener(mOnFieldViewClickListener);
+        mFieldViewGroup.setupAllFieldsTextSize(textSize,textSize_9);
+        mFieldViewGroup.setupAllFieldsOnClickListener(mOnFieldViewClickListener,mOnFieldViewClickListener_9);
         mFieldViewGroup.changeTo7Fields();
+//        mFieldViewGroup.setAllButtonBackgroundColor(buttonBackgroud);
+        mFieldViewGroup.setAllButtonTextColor(R.color.pwk_333);
     }
 
     private void initSelectedDrawable(Context context, String className) {
@@ -322,6 +345,7 @@ public class InputView extends LinearLayout {
             if (lastShown == null && selected.isShown()) {
                 lastShown = selected;
             }
+            boolean a = selected.getVisibility() == View.VISIBLE && selected.isSelected();
             if (selected.getVisibility() == View.VISIBLE && selected.isSelected()) {
                 if (selected == lastShown) {
                     mSelectedDrawable.setPosition(SelectedDrawable.Position.LAST);

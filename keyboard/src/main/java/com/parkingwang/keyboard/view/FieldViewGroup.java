@@ -6,6 +6,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 
+import com.parkingwang.keyboard.AppGlobals;
 import com.parkingwang.vehiclekeyboard.R;
 
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ abstract class FieldViewGroup {
 
     private static final String TAG = "InputView.ButtonGroup";
 
-    private final Button[] mFieldViews = new Button[8];
+    private final Button[] mFieldViews = new Button[9];
+    private final Button[] mFieldViews_delete = new Button[8];
 
     public FieldViewGroup() {
         final int[] resIds = new int[]{
@@ -29,11 +31,16 @@ abstract class FieldViewGroup {
                 R.id.number_4,
                 R.id.number_5,
                 R.id.number_6,
-                R.id.number_7
+                R.id.number_7,
+                R.id.number_8
         };
         for (int i = 0; i < resIds.length; i++) {
             mFieldViews[i] = findViewById(resIds[i]);
             mFieldViews[i].setTag("[RAW.idx:" + i + "]");
+        }
+        for (int i = 0; i < resIds.length - 1; i++) {
+            mFieldViews_delete[i] = findViewById(resIds[i]);
+            mFieldViews_delete[i].setTag("[RAW.idx:" + i + "]");
         }
         // 默认时，显示8位
         changeTo8Fields();
@@ -68,10 +75,10 @@ abstract class FieldViewGroup {
 
     public Button[] getAvailableFields() {
         final List<Button> output = new ArrayList<>(8);
-        final int lastIndex = mFieldViews.length - 1;
+        final int lastIndex = mFieldViews_delete.length - 1;
         Button fieldView;
-        for (int i = 0; i < mFieldViews.length; i++) {
-            fieldView = mFieldViews[i];
+        for (int i = 0; i < mFieldViews_delete.length; i++) {
+            fieldView = mFieldViews_delete[i];
             if (i != lastIndex || fieldView.getVisibility() == View.VISIBLE) {
                 output.add(fieldView);
             }
@@ -89,6 +96,8 @@ abstract class FieldViewGroup {
         }
         mFieldViews[7].setVisibility(View.GONE);
         mFieldViews[7].setText(null);
+        mFieldViews[8].setVisibility(View.VISIBLE);
+        mFieldViews[8].setText("+\r\n新能源");
         return true;
     }
 
@@ -98,6 +107,7 @@ abstract class FieldViewGroup {
         }
         mFieldViews[7].setVisibility(View.VISIBLE);
         mFieldViews[7].setText(null);
+        mFieldViews[8].setVisibility(View.GONE);
         return true;
     }
 
@@ -163,21 +173,39 @@ abstract class FieldViewGroup {
 
     public String getText() {
         final StringBuilder sb = new StringBuilder();
-        for (Button field : getAvailableFields()) {
-            sb.append(field.getText());
+        for (int i = 0; i < getAvailableFields().length - 1; i++) {
+            sb.append(getAvailableFields()[i].getText());
         }
         return sb.toString();
     }
 
-    public void setupAllFieldsTextSize(float size) {
-        for (Button field : mFieldViews) {
-            field.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+    public void setupAllFieldsTextSize(float size, float size_9) {
+        for (int i = 0; i < mFieldViews.length - 1; i++) {
+            mFieldViews[i].setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        }
+        mFieldViews[8].setTextSize(TypedValue.COMPLEX_UNIT_PX, size_9);
+    }
+
+    public void setAllButtonBackgroundColor(int color) {
+        for (Button mFieldView : mFieldViews) {
+            mFieldView.setBackgroundColor(color);
         }
     }
 
-    public void setupAllFieldsOnClickListener(View.OnClickListener listener) {
-        for (Button field : mFieldViews) {
-            field.setOnClickListener(listener);
+    public void setAllButtonTextColor(int color) {
+        for (Button mFieldView : mFieldViews) {
+            mFieldView.setTextColor(AppGlobals.get().getResources().getColor(color));
         }
+    }
+
+    public void setupAllFieldsOnClickListener(View.OnClickListener listener, View.OnClickListener listener_9) {
+        for (int i = 0; i < mFieldViews.length - 1; i++) {
+            mFieldViews[i].setOnClickListener(listener);
+        }
+        mFieldViews[8].setOnClickListener(listener_9);
+    }
+
+    public Button get9Button() {
+        return mFieldViews[8];
     }
 }

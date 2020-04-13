@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PWKInputItemStyle_BORDER_KEY" parent="PWKInputItemBaseStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundTint">#ffeeeeee</item>
+        <item name="android:textColor">@color/pwk_input_item_text_border</item>
+        <item name="android:layout_margin">0px</item>
+    </style>
+</resources>

@@ -28,7 +28,7 @@ public class KeyboardInputController {
 
     private final Set<OnInputChangedListener> mOnInputChangedListeners = new LinkedHashSet<>(4);
 
-    private boolean mLockedOnNewEnergyType = false;
+    public static boolean mLockedOnNewEnergyType = false;
     private boolean mDebugEnabled = true;
     private MessageHandler mMessageHandler;
 
@@ -236,6 +236,7 @@ public class KeyboardInputController {
 
     // 锁定新能源车牌
     private void triggerLockEnergyType(boolean completed) {
+
         if (Texts.isNewEnergyType(mInputView.getNumber())) {
             mLockedOnNewEnergyType = true;
             mMessageHandler.onMessageTip(R.string.pwk_now_is_energy);
@@ -356,11 +357,11 @@ public class KeyboardInputController {
 
         @Override
         public void onNumberTypeChanged(boolean isNewEnergyType) {
-            if (isNewEnergyType) {
-                mButton.setText(R.string.pwk_change_to_normal);
-            } else {
-                mButton.setText(R.string.pwk_change_to_energy);
-            }
+//            if (isNewEnergyType) {
+//                mButton.setText(R.string.pwk_change_to_normal);
+//            } else {
+//                mButton.setText(R.string.pwk_change_to_energy);
+//            }
         }
     }
 

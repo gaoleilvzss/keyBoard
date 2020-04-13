@@ -4,8 +4,10 @@
 
 package com.parkingwang.vehiclekeyboard.demo;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +15,9 @@ import android.widget.Toast;
 
 import com.parkingwang.keyboard.KeyboardInputController;
 import com.parkingwang.keyboard.PopupKeyboard;
+import com.parkingwang.keyboard.engine.KeyboardEntry;
 import com.parkingwang.keyboard.view.InputView;
+import com.parkingwang.keyboard.view.OnKeyboardChangedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private PopupKeyboard mPopupKeyboard;
     private long mTestIndex = 0;
 
-    private boolean mHideOKKey = false;
+    private boolean mHideOKKey = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mInputView = findViewById(R.id.input_view);
-        mProvinceView = findViewById(R.id.province_value);
 
         final Button lockTypeButton = findViewById(R.id.lock_type);
 
@@ -60,14 +63,38 @@ public class MainActivity extends AppCompatActivity {
         mPopupKeyboard = new PopupKeyboard(this);
         // 弹出键盘内部包含一个KeyboardView，在此绑定输入两者关联。
         mPopupKeyboard.attach(mInputView, this);
-
         // 隐藏确定按钮
         mPopupKeyboard.getKeyboardEngine().setHideOKKey(mHideOKKey);
+        mPopupKeyboard.getKeyboardView().addKeyboardChangedListener(new OnKeyboardChangedListener() {
+            @Override
+            public void onTextKey(String text) {
 
+            }
+
+            @Override
+            public void onDeleteKey() {
+                mInputView.get9Button().setVisibility(View.VISIBLE);
+                mInputView.get9Button().setText("+\r\n新能源");
+                mInputView.set8thVisibility(false);
+                KeyboardInputController.mLockedOnNewEnergyType = false;
+            }
+
+            @Override
+            public void onConfirmKey() {
+                if(mPopupKeyboard.isShown()){
+                    mPopupKeyboard.dismiss(MainActivity.this);
+                }
+            }
+
+            @Override
+            public void onKeyboardChanged(KeyboardEntry keyboard) {
+
+            }
+        });
         // KeyboardInputController提供一个默认实现的新能源车牌锁定按钮
         mPopupKeyboard.getController()
                 .setDebugEnabled(true)
-                .bindLockTypeProxy(new KeyboardInputController.ButtonProxyImpl(lockTypeButton) {
+                .bindLockTypeProxy(new KeyboardInputController.ButtonProxyImpl(mInputView.get9Button()) {
                     @Override
                     public void onNumberTypeChanged(boolean isNewEnergyType) {
                         super.onNumberTypeChanged(isNewEnergyType);
@@ -80,7 +107,25 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
-
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if(mPopupKeyboard!=null){
+            if(!isInEditText(mPopupKeyboard.getKeyboardView(),ev)){
+                if(mPopupKeyboard.isShown()){
+                    mPopupKeyboard.dismiss(MainActivity.this);
+                }
+            }
+            return false;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+    private boolean isInEditText(View v, MotionEvent event) {
+        Rect frame = new Rect();
+        v.getHitRect(frame);
+        float eventX = event.getX();
+        float eventY = event.getY();
+        return frame.contains((int) eventX, (int) eventY);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -91,42 +136,5 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         int id = view.getId();
         // 切换键盘类型
-        switch (id) {
-            case R.id.test_number:
-                final int idx = (int) (mTestIndex % mTestNumber.size());
-                mTestIndex++;
-                // 上面测试例子中，第12个，指定为新能源车牌，部分车牌
-                if (idx == 11) {
-                    mPopupKeyboard.getController().updateNumberLockType(mTestNumber.get(idx), true);
-                } else {
-                    mPopupKeyboard.getController().updateNumber(mTestNumber.get(idx));
-                }
-                break;
-            case R.id.clear_number:
-                mPopupKeyboard.getController().updateNumber("");
-                break;
-            case R.id.popup_keyboard:
-                if (mPopupKeyboard.isShown()) {
-                    mPopupKeyboard.dismiss(MainActivity.this);
-                } else {
-                    mPopupKeyboard.show(MainActivity.this);
-                }
-                break;
-
-            case R.id.hide_ok_key:
-                mHideOKKey = !mHideOKKey;
-                mPopupKeyboard.getKeyboardEngine().setHideOKKey(mHideOKKey);
-                Toast.makeText(getBaseContext(),
-                        "演示“确定”键盘状态，将在下一个操作中生效: " + (mHideOKKey ? "隐藏" : "显示"), Toast.LENGTH_SHORT)
-                        .show();
-                break;
-
-            case R.id.commit_province:
-                final String name = mProvinceView.getText().toString();
-                mPopupKeyboard.getKeyboardEngine().setLocalProvinceName(name);
-                Toast.makeText(getBaseContext(),
-                        "演示“周边省份”重新排序，将在下一个操作中生效：" + name, Toast.LENGTH_SHORT).show();
-                break;
-        }
     }
 }

@@ -5,7 +5,6 @@
     <size
         android:width="@dimen/pwk_input_view_divider_split_space"
         android:height="@dimen/pwk_input_view_divider_split_space"/>
-
     <solid android:color="@android:color/transparent" />
 
 </shape>
